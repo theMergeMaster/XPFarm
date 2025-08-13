@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
 
 namespace FortniteAFK.src
 {
@@ -89,7 +90,11 @@ namespace FortniteAFK.src
             MaximizeBox = false;
 
             // Establecer el icono de la aplicación en la taskbar
-            Icon = new Icon("icons\\appicon.ico");
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var stream = assembly.GetManifestResourceStream("FortniteAFK.icons.appicon.ico"))
+            {
+                Icon = new Icon(stream);
+            }
 
             // Create controls
             Label lblTitle = new Label
