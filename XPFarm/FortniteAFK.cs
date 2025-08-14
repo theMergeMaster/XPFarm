@@ -52,10 +52,55 @@ namespace FortniteAFK.src
         private DateTime endTime = DateTime.MaxValue;
         private byte stopKey = VK_ESCAPE;
         private bool useStopKey = false;
+
+        // List of main keys used in the script that are not suppossed to be used as stop keys
+        private static readonly List<byte> invalidKeys = new List<byte> 
+        {
+            0x57, // W
+            0x53, // S
+            0x41, // A 
+            0x44, // D
+            0x20, // Space
+            0x0002, // Left mouse button
+            0x0004  // Right mouse button
+        };
         private static readonly Dictionary<int, string> keyNames = new Dictionary<int, string>
         {
-            { VK_SPACE, "Space" },
-            { VK_ESCAPE, "Escape" }
+            { 0x08, "Backspace" },
+            { 0x09, "Tab" },
+            { 0x0D, "Enter" },
+            { 0x10, "Shift" },
+            { 0x11, "Ctrl" },
+            { 0x12, "Alt" },
+            { 0x13, "Pause" },
+            { 0x14, "CapsLock" },
+            { 0x1B, "Escape" },
+            { 0x20, "Space" },
+            { 0x21, "PageUp" },
+            { 0x22, "PageDown" },
+            { 0x23, "End" },
+            { 0x24, "Home" },
+            { 0x25, "ArrowLeft" },
+            { 0x26, "ArrowUp" },
+            { 0x27, "ArrowRight" },
+            { 0x28, "ArrowDown" },
+            { 0x2D, "Insert" },
+            { 0x2E, "Delete" },
+            { 0x5B, "Left Windows" },
+            { 0x5C, "Right Windows" },
+            { 0x5D, "Context Menu" },
+            { 0x70, "F1" },
+            { 0x71, "F2" },
+            { 0x72, "F3" },
+            { 0x73, "F4" },
+            { 0x74, "F5" },
+            { 0x75, "F6" },
+            { 0x76, "F7" },
+            { 0x77, "F8" },
+            { 0x78, "F9" },
+            { 0x79, "F10" },
+            { 0x7A, "F11" },
+            { 0x7B, "F12" }
         };
 
         // UI Controls
@@ -265,6 +310,13 @@ namespace FortniteAFK.src
             keyForm.KeyDown += (s, ev) =>
             {
                 stopKey = (byte)ev.KeyCode;
+
+                if (invalidKeys.Contains(stopKey))
+                {
+                    MessageBox.Show("This key cannot be used to stop the process.", "Invalid Key", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 string stopKeyName = keyNames.ContainsKey(stopKey) ? keyNames[stopKey] : ((char)stopKey).ToString();
                 lblSelectedKey.Text = $"Key: {stopKeyName}";
                 lblSelectedKey.ForeColor = Color.Black;
@@ -344,11 +396,13 @@ namespace FortniteAFK.src
                 while (isRunning && DateTime.Now < endTime)
                 {
                     int waitTime = random.Next(3, 31); // Between 3 and 30 seconds
-                    
-                    PressKey(VK_W);
-                    PressKey(VK_S);
-                    PressKey(VK_SPACE);
-                    
+
+                    foreach (byte key in new byte[] { VK_W, VK_S, VK_SPACE })
+                    {
+                        PressKey(key);
+                        if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
+                    }
+
                     // Random click
                     if (random.Next(0, 3) == 2)
                     {
@@ -356,10 +410,12 @@ namespace FortniteAFK.src
                         mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
                         Thread.Sleep(100);
                         mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+                        if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
                     }
-                    
+
                     PressKey(VK_W);
-                    
+                    if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
+
                     Log($"Waiting {waitTime} seconds...");
                     Thread.Sleep(waitTime * 1000);
                 }
@@ -421,7 +477,7 @@ namespace FortniteAFK.src
             
             isRunning = false;
             Log("Stopping process...");
-            
+
             if (executionThread != null && executionThread.IsAlive)
             {
                 executionThread.Join(1000);

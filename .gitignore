@@ -4,6 +4,5 @@ Release
 Properties
 .vs
 *.user
-*.txt
 *.pdb
 *.exe.config
