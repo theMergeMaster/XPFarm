@@ -54,8 +54,41 @@ namespace FortniteAFK.src
         private bool useStopKey = false;
         private static readonly Dictionary<int, string> keyNames = new Dictionary<int, string>
         {
-            { VK_SPACE, "Space" },
-            { VK_ESCAPE, "Escape" }
+            { 0x08, "Backspace" },
+            { 0x09, "Tab" },
+            { 0x0D, "Enter" },
+            { 0x10, "Shift" },
+            { 0x11, "Ctrl" },
+            { 0x12, "Alt" },
+            { 0x13, "Pause" },
+            { 0x14, "CapsLock" },
+            { 0x1B, "Escape" },
+            { 0x20, "Space" },
+            { 0x21, "PageUp" },
+            { 0x22, "PageDown" },
+            { 0x23, "End" },
+            { 0x24, "Home" },
+            { 0x25, "ArrowLeft" },
+            { 0x26, "ArrowUp" },
+            { 0x27, "ArrowRight" },
+            { 0x28, "ArrowDown" },
+            { 0x2D, "Insert" },
+            { 0x2E, "Delete" },
+            { 0x5B, "Left Windows" },
+            { 0x5C, "Right Windows" },
+            { 0x5D, "Context Menu" },
+            { 0x70, "F1" },
+            { 0x71, "F2" },
+            { 0x72, "F3" },
+            { 0x73, "F4" },
+            { 0x74, "F5" },
+            { 0x75, "F6" },
+            { 0x76, "F7" },
+            { 0x77, "F8" },
+            { 0x78, "F9" },
+            { 0x79, "F10" },
+            { 0x7A, "F11" },
+            { 0x7B, "F12" }
         };
 
         // UI Controls
