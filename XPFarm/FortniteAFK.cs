@@ -52,6 +52,18 @@ namespace FortniteAFK.src
         private DateTime endTime = DateTime.MaxValue;
         private byte stopKey = VK_ESCAPE;
         private bool useStopKey = false;
+
+        // List of main keys used in the script that are not suppossed to be used as stop keys
+        private static readonly List<byte> invalidKeys = new List<byte> 
+        {
+            0x57, // W
+            0x53, // S
+            0x41, // A 
+            0x44, // D
+            0x20, // Space
+            0x0002, // Left mouse button
+            0x0004  // Right mouse button
+        };
         private static readonly Dictionary<int, string> keyNames = new Dictionary<int, string>
         {
             { 0x08, "Backspace" },
@@ -298,6 +310,13 @@ namespace FortniteAFK.src
             keyForm.KeyDown += (s, ev) =>
             {
                 stopKey = (byte)ev.KeyCode;
+
+                if (invalidKeys.Contains(stopKey))
+                {
+                    MessageBox.Show("This key cannot be used to stop the process.", "Invalid Key", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 string stopKeyName = keyNames.ContainsKey(stopKey) ? keyNames[stopKey] : ((char)stopKey).ToString();
                 lblSelectedKey.Text = $"Key: {stopKeyName}";
                 lblSelectedKey.ForeColor = Color.Black;
