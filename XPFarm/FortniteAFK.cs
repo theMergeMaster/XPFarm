@@ -396,11 +396,13 @@ namespace FortniteAFK.src
                 while (isRunning && DateTime.Now < endTime)
                 {
                     int waitTime = random.Next(3, 31); // Between 3 and 30 seconds
-                    
-                    PressKey(VK_W);
-                    PressKey(VK_S);
-                    PressKey(VK_SPACE);
-                    
+
+                    foreach (byte key in new byte[] { VK_W, VK_S, VK_SPACE })
+                    {
+                        PressKey(key);
+                        if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
+                    }
+
                     // Random click
                     if (random.Next(0, 3) == 2)
                     {
@@ -408,10 +410,12 @@ namespace FortniteAFK.src
                         mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
                         Thread.Sleep(100);
                         mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+                        if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
                     }
-                    
+
                     PressKey(VK_W);
-                    
+                    if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
+
                     Log($"Waiting {waitTime} seconds...");
                     Thread.Sleep(waitTime * 1000);
                 }
@@ -473,7 +477,7 @@ namespace FortniteAFK.src
             
             isRunning = false;
             Log("Stopping process...");
-            
+
             if (executionThread != null && executionThread.IsAlive)
             {
                 executionThread.Join(1000);
