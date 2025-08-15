@@ -69,7 +69,7 @@ To create a release version for distribution:
 
 
 
-</h2 id="usage-instructions">❓Usage Instructions:</h2>
+<h2 id="usage-instructions">❓Usage Instructions:</h2>
 
 <h3>🇪🇳 English</h3>
 
