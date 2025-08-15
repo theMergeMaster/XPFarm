@@ -45,16 +45,19 @@ namespace FortniteAFK.src
         private const byte VK_SPACE = 0x20;
         private const byte VK_ESCAPE = 0x1B; // Default key to stop
 
-        private bool isRunning = false;
-        private Random random = new Random();
+        // Variables to control the process
         private Thread executionThread;
         private Thread keyMonitorThread;
+
+        private bool isRunning = false;
+        private Random random = new Random();
         private DateTime endTime = DateTime.MaxValue;
-        private byte stopKey = VK_ESCAPE;
+
         private bool useStopKey = false;
+        private byte stopKey = VK_ESCAPE;
 
         // List of main keys used in the script that are not suppossed to be used as stop keys
-        private static readonly List<byte> invalidKeys = new List<byte> 
+        private static readonly List<byte> invalidStopKeys = new List<byte> 
         {
             0x57, // W
             0x53, // S
@@ -64,6 +67,8 @@ namespace FortniteAFK.src
             0x0002, // Left mouse button
             0x0004  // Right mouse button
         };
+
+        // Dictionary to map virtual key codes to human-readable names
         private static readonly Dictionary<int, string> keyNames = new Dictionary<int, string>
         {
             { 0x08, "Backspace" },
@@ -117,31 +122,34 @@ namespace FortniteAFK.src
 
         public MainForm()
         {
+            // Initialize the form and its components
             InitializeComponent();
             FormClosing += MainForm_FormClosing;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // Ensure the process is stopped when the form is closed
             StopProcess();
         }
 
         private void InitializeComponent()
         {
+            // Title
             Text = "Fortnite AFK XP Farm";
             Size = new Size(500, 500);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
 
-            // Establecer el icono de la aplicación en la taskbar
+            // Icon
             var assembly = Assembly.GetExecutingAssembly();
             using (var stream = assembly.GetManifestResourceStream("FortniteAFK.icons.appicon.ico"))
             {
                 Icon = new Icon(stream);
             }
 
-            // Create controls
+            // Controls
             Label lblTitle = new Label
             {
                 Text = "Fortnite AFK XP Farm",
@@ -264,7 +272,7 @@ namespace FortniteAFK.src
             panelConfig.Controls.Add(btnSelectKey);
             panelConfig.Controls.Add(lblSelectedKey);
             panelConfig.Controls.Add(btnStart);
-            panelConfig.Controls.Add(btnStop);
+            panelConfig.Controls.Add(btnStop);  
             panelConfig.Controls.Add(lblStatus);
             
             // Update the CheckedChanged event to also change the label color
@@ -288,6 +296,7 @@ namespace FortniteAFK.src
 
         private void BtnSelectKey_Click(object sender, EventArgs e)
         {
+            // Show a form to select the key to stop the process
             Form keyForm = new Form
             {
                 Text = "Press a key",
@@ -311,7 +320,7 @@ namespace FortniteAFK.src
             {
                 stopKey = (byte)ev.KeyCode;
 
-                if (invalidKeys.Contains(stopKey))
+                if (invalidStopKeys.Contains(stopKey))
                 {
                     MessageBox.Show("This key cannot be used to stop the process.", "Invalid Key", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -382,6 +391,7 @@ namespace FortniteAFK.src
 
         private void BtnStop_Click(object sender, EventArgs e)
         {
+            // Stop the process
             StopProcess();
         }
 
@@ -400,7 +410,8 @@ namespace FortniteAFK.src
                     foreach (byte key in new byte[] { VK_W, VK_S, VK_SPACE })
                     {
                         PressKey(key);
-                        if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
+                        // Check if the user has stopped the process after each action
+                        if (!isRunning) break;
                     }
 
                     // Random click
@@ -410,11 +421,13 @@ namespace FortniteAFK.src
                         mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
                         Thread.Sleep(100);
                         mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
-                        if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
+                        // Check if the user has stopped the process after each action
+                        if (!isRunning) break;
                     }
 
                     PressKey(VK_W);
-                    if (!isRunning) break; // Comprobamos que no pausa el proceso en mitad de la pulsación
+                    // Check if the user has stopped the process after each action
+                    if (!isRunning) break;
 
                     Log($"Waiting {waitTime} seconds...");
                     Thread.Sleep(waitTime * 1000);
@@ -460,6 +473,7 @@ namespace FortniteAFK.src
         {
             while (isRunning)
             {
+                // Check if the stop key is pressed
                 if ((GetAsyncKeyState(key) & 0x8000) != 0)
                 {
                     string keyName = keyNames.ContainsKey(key) ? keyNames[key] : key.ToString();
@@ -478,11 +492,13 @@ namespace FortniteAFK.src
             isRunning = false;
             Log("Stopping process...");
 
+            // Stop the execution thread if it exists
             if (executionThread != null && executionThread.IsAlive)
             {
                 executionThread.Join(1000);
             }
-            
+
+            // Stop the key monitor thread if it exists
             if (keyMonitorThread != null && keyMonitorThread.IsAlive)
             {
                 keyMonitorThread.Join(1000);
@@ -491,6 +507,7 @@ namespace FortniteAFK.src
 
         private void Log(string message)
         {
+            // Ensure the log is updated in the UI thread
             if (InvokeRequired)
             {
                 Invoke(new Action<string>(Log), message);
