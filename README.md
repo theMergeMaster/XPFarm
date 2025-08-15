@@ -1,4 +1,4 @@
-﻿<h1 align="center" id="title">Fortnite AFK Mover</h1>
+﻿<h1 align="center" id="title">XP Farm</h1>
 
 <p align="center"><img src="https://socialify.git.ci/theMergeMaster/XPFarm/image?description=1&font=Inter&name=1&pattern=Plus&theme=Auto" alt="project-image"></p>
 
