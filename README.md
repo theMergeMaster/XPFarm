@@ -3,10 +3,10 @@
 <p align="center"><img src="https://socialify.git.ci/theMergeMaster/XPFarm/image?description=1&font=Inter&name=1&pattern=Plus&theme=Auto" alt="project-image"></p>
 
 
-
-[![❓ Usage Instructions (EN/ES)](https://img.shields.io/badge/❓-Usage%20Instructions-blue?style=flat)](#usage-instructions)
-![💻 Built with C#](https://img.shields.io/badge/💻%20Built%20with-C%23-178600?style=flat&logo=csharp&logoColor=white)
-![🛡️ License: GNU GPL v3](https://img.shields.io/badge/🛡️%20License-GNU%20GPL%20v3-blue?style=flat)
+[![📥 Installer (latest version)](https://img.shields.io/badge/📥-Installer%20(latest%20version)-blue?style=flat)](https://github.com/theMergeMaster/XPFarm/releases/download/v1.0.3/Installer.zip)
+[![❓ Usage Instructions (EN/ES)](https://img.shields.io/badge/❓-Usage%20Instructions-yellow?style=flat)](#usage-instructions)
+![💻 Built with C#](https://img.shields.io/badge/💻%20Built%20with-C%23-178600-red?style=flat&logo=csharp&logoColor=white)
+![🛡️ License: GNU GPL v3](https://img.shields.io/badge/🛡️%20License-GNU%20GPL%20v3-green?style=flat)
 
 
 
